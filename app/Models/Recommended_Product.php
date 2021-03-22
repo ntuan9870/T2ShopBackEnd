@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Recommended_Product extends Model
 {
     use HasFactory;
-    protected $table="recommend";
+    protected $table="recommend_product";
     protected $primaryKey = "recommend_id";
     protected $guarded = [];
 }
