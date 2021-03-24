@@ -251,11 +251,22 @@ class ProductController extends Controller
             })->select('*')->get();
         }
         $promotions = array();
+        $ratings = array();
         foreach($products as $p){
             $promotion = Promotion::find($p->product_promotion);
             array_push($promotions,$promotion);
+            $tb = DB::table('rating')->where('product_id',$request->product_id)->avg('rating_star');
+            if($tb=='') $tb = '0';
+            array_push($ratings, (string)$tb);
         }
-        return response()->json(['products'=>$products, 'promotions'=>$promotions]);
+        
+        return response()->json(['products'=>$products,'promotions'=>$promotions,'ratings'=>$ratings]);
+        // $promotions = array();
+        // foreach($products as $p){
+        //     $promotion = Promotion::find($p->product_promotion);
+        //     array_push($promotions,$promotion);
+        // }
+        // return response()->json(['products'=>$products, 'promotions'=>$promotions]);
     }
     public function getEditProduct(Request $request){
         $product = product::find($request->id);
@@ -278,11 +289,16 @@ class ProductController extends Controller
             $products = DB::table('products')->latest('updated_at')->get();
         }
         $promotions = array();
+        $ratings = array();
         foreach($products as $p){
             $promotion = Promotion::find($p->product_promotion);
             array_push($promotions,$promotion);
+            $tb = DB::table('rating')->where('product_id',$request->product_id)->avg('rating_star');
+            if($tb=='') $tb = '0';
+            array_push($ratings, (string)$tb);
         }
-        return response()->json(['products'=>$products,'promotions'=>$promotions]);
+        
+        return response()->json(['products'=>$products,'promotions'=>$promotions,'ratings'=>$ratings]);
     }
     public function getFeaturedProduct(Request $request){
         if($request->sl!='0'){
@@ -291,11 +307,15 @@ class ProductController extends Controller
             $products = DB::table('products')->latest('updated_at')->get();
         }
         $promotions = array();
+        $ratings = array();
         foreach($products as $p){
             $promotion = Promotion::find($p->product_promotion);
             array_push($promotions,$promotion);
+            $tb = DB::table('rating')->where('product_id',$request->product_id)->avg('rating_star');
+            if($tb=='') $tb = '0';
+            array_push($ratings, (string)$tb);
         }
-        return response()->json(['products'=>$products,'promotions'=>$promotions]);
+        return response()->json(['products'=>$products,'promotions'=>$promotions,'ratings'=>$ratings]);
     }
 
     public function addComment(Request $request){
