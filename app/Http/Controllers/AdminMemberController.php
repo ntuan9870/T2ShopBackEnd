@@ -21,7 +21,7 @@ class AdminMemberController extends Controller
         $validate = Validator::make($request->all(),
             [
                 'user_name'=>'required',
-                'user_email'=>'required|email'
+                'user_email'=>'required|email|unique:user,user_email'
             ],
             [
                 'user_name.required'=>'Tên hiển thị là trường bắt buộc!',

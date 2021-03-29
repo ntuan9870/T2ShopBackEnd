@@ -257,7 +257,7 @@ class ProductController extends Controller
             array_push($promotions,$promotion);
             $tb = DB::table('rating')->where('product_id',$request->product_id)->avg('rating_star');
             if($tb=='') $tb = '0';
-            array_push($ratings, (string)$tb);
+            array_push($ratings, $tb);
         }
         
         return response()->json(['products'=>$products,'promotions'=>$promotions,'ratings'=>$ratings]);
@@ -293,7 +293,7 @@ class ProductController extends Controller
         foreach($products as $p){
             $promotion = Promotion::find($p->product_promotion);
             array_push($promotions,$promotion);
-            $tb = DB::table('rating')->where('product_id',$request->product_id)->avg('rating_star');
+            $tb = DB::table('rating')->where('product_id',$p->product_id)->avg('rating_star');
             if($tb=='') $tb = '0';
             array_push($ratings, (string)$tb);
         }
@@ -322,7 +322,6 @@ class ProductController extends Controller
         $comment = new Comment();
         $comment->user_id = $request->user_id;
         $comment->product_id = $request->product_id;
-        $comment->user_id = $request->user_id;
         $comment->comment_content = $request->comment_content;
         $comment->save();
         return response()->json(['message'=>'success']);

@@ -89,7 +89,11 @@ class UserController extends Controller
             'code'=> $code
         ];
         $user = DB::table('user')->where('user_email','=',$request->email)->get('*')->first();
-        $dk = DB::table('maxacnhan')->where('id_user','=',$user->user_id)->get('*')->first();
+        if($user!=null){
+            $dk = DB::table('maxacnhan')->where('id_user','=',$user->user_id)->get('*')->first();
+        }else{
+            return response()->json(['message'=>'fail']);
+        }
         if($dk!=null){
             $now = Carbon::now();
             $dt = Carbon::parse($dk->start);
@@ -122,8 +126,12 @@ class UserController extends Controller
         if($code){
             $now = Carbon::now();
             $dt = Carbon::parse($code->start);
-            if($dt->diffInSeconds($now)>180){
+            if($dt->diffInSeconds($now)>180&&$dt->diffInSeconds($now)<=360){
                 return response()->json(['message'=>'wait']);
+            }
+            if($dt->diffInSeconds($now)>360){
+                DB::table('maxacnhan')->where('id_user','=',$user->user_id)->delete();
+                return response()->json(['message'=>'clear']);
             }
             return response()->json(['message'=>'success','time'=>180-$dt->diffInSeconds($now),'code'=>$code->code]);
         }
