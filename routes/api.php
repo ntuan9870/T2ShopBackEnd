@@ -158,7 +158,7 @@ Route::group(["namespace"=>"App\Http\Controllers"],function() {
     Route::any('chatbot/addMessage','ChatBotController@addMessage');
 
     Route::any('recommened/add','RecommendedController@add');
-    Route::any('recommened/get','RecommendedController@get');
+    Route::any('recommened/getrecommened','RecommendedController@getrecommened');
 
 });
 
