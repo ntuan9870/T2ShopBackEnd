@@ -269,7 +269,7 @@ class ProductController extends Controller
         // return response()->json(['products'=>$products, 'promotions'=>$promotions]);
     }
     public function getEditProduct(Request $request){
-        $product = product::find($request->id);
+        $product = product::where('product_id',$request->id)->join('categories','products.product_cate','=','categories.category_id')->first();
         // $promotions = array();
         // foreach($p as $p1){promotion
             $promotion = Promotion::find($product->product_promotion); 
