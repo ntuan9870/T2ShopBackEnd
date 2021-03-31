@@ -159,6 +159,8 @@ Route::group(["namespace"=>"App\Http\Controllers"],function() {
 
     Route::any('recommened/add','RecommendedController@add');
     Route::any('recommened/getrecommened','RecommendedController@getrecommened');
+    Route::any('recommened/showCate','RecommendedController@showCate');
+    
 
 });
 

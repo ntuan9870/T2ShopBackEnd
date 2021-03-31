@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Models\Recommended_Product;
 use Illuminate\Support\Facades\DB;
 use App\Models\Promotion;
+use App\Models\Category;
+use App\Models\product;
 
 class RecommendedController extends Controller
 {
@@ -25,10 +27,6 @@ class RecommendedController extends Controller
             array_push($products,$product);
         }
         $promotions = array();
-        // foreach($product as $p){
-        //     $promotion = Promotion::find($p->product_promotion);
-        //     array_push($promotions,$promotion);
-        // }
         for($i=0; $i<count($products);$i++){
             foreach($products[$i] as $promo){
                 $promotion = Promotion::find($promo->product_promotion);
@@ -36,5 +34,11 @@ class RecommendedController extends Controller
             }
         }
         return response()->json(['products'=>$product,'promotions'=>$promotions]);
+            
+    }
+    public function showCate(Request $request){
+        $product = DB::table('products')->where('product_name',$request->key)->select('product_cate')->first();
+        $productCate=Category::find($product);
+        return response()->json(['productCate'=>$productCate]);
     }
 }
