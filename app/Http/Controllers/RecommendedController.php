@@ -41,8 +41,8 @@ class RecommendedController extends Controller
         }
     }
     public function showCate(Request $request){
-        $product = DB::table('products')->where('product_name',$request->key)->select('product_cate')->first();
-        $productCate=Category::find($product);
+        // $product = DB::table('products')->where('product_name','LIKE','%'.$request->key.'%')->select('product_cate')->first();->select('product_cate')->first();
+        $productCate=Category::where('category_name','LIKE','%'.$request->key.'%')->select('category_name')->get();
         return response()->json(['productCate'=>$productCate]);
     }
 }
