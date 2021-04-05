@@ -20,21 +20,25 @@ class RecommendedController extends Controller
     }
    
     public function getrecommened(Request $request){
-        $category = Recommended_Product::where('user_id',$request->user_id)->select('product_id')->orderBy('recommend_id','asc')->get();
-        $products = array();
-        foreach($category as $c){
-            $product = DB::table('products')->join('categories','products.product_cate','=','categories.category_id')->where('category_name','LIKE','%'.$c->product_id.'%')->get();
-            array_push($products,$product);
-        }
-        $promotions = array();
-        for($i=0; $i<count($products);$i++){
-            foreach($products[$i] as $promo){
-                $promotion = Promotion::find($promo->product_promotion);
-                array_push($promotions,$promotion);
+        if($request->user_id){
+            $category = Recommended_Product::where('user_id',$request->user_id)->select('product_id')->orderBy('recommend_id','asc')->get();
+            $products = array();
+            $product = array();
+            foreach($category as $c){
+                $product = DB::table('products')->join('categories','products.product_cate','=','categories.category_id')->where('category_name','LIKE','%'.$c->product_id.'%')->get();
+                array_push($products,$product);
+            }
+            $promotions = array();
+            for($i=0; $i<count($products);$i++){
+                foreach($products[$i] as $promo){
+                    $promotion = Promotion::find($promo->product_promotion);
+                    array_push($promotions,$promotion);
+                }
+            }
+            if($product){
+                return response()->json(['products'=>$product,'promotions'=>$promotions]);
             }
         }
-        return response()->json(['products'=>$product,'promotions'=>$promotions]);
-            
     }
     public function showCate(Request $request){
         $product = DB::table('products')->where('product_name',$request->key)->select('product_cate')->first();
