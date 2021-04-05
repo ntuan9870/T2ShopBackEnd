@@ -23,6 +23,10 @@ class RecommendedController extends Controller
         if($request->user_id){
             $category = Recommended_Product::where('user_id',$request->user_id)->select('product_id')->orderBy('recommend_id','asc')->get();
             $products = array();
+<<<<<<< HEAD
+=======
+            $product = array();
+>>>>>>> abf571eade9e0b76d9d888541ac06348fa6e2e42
             foreach($category as $c){
                 $product = DB::table('products')->join('categories','products.product_cate','=','categories.category_id')->where('category_name','LIKE','%'.$c->product_id.'%')->get();
                 array_push($products,$product);
