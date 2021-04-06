@@ -76,6 +76,7 @@ Route::group(["namespace"=>"App\Http\Controllers"],function() {
     Route::any('promotion/remove','PromotionController@remove');
     Route::any('promotion/edit','PromotionController@getedit');
     Route::any('promotion/postedit','PromotionController@postedit');
+    Route::any('promotion/getproduct','PromotionController@getproduct');
 
 
     Route::any('warehouse/show','WarehouseController@show');
