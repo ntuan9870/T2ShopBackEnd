@@ -15,6 +15,8 @@ use App\Models\ProductWH;
 use App\Models\DeliveryBill;
 use App\Models\DetailDeliveryBill;
 use App\Models\Inventory;
+use App\Models\BallotImport;
+use App\Models\DetailBallotImport;
 use Illuminate\Support\Facades\Validator;
 
 class WarehouseController extends Controller
@@ -353,6 +355,24 @@ class WarehouseController extends Controller
     }
     public function Removewh(Request $request){
         Warehouse::destroy($request->wh_id);
+        return response()->json(['message'=>'success']);
+    }
+
+    public function importProductWH(Request $request){
+        $data = json_decode($request->product, true);
+        $bi = new BallotImport();
+        $bi->user_id = $request->user_id;
+        $bi->warehouse_id = $request->wh_id;
+        $bi->sum_amount = $request->sum_amount; 
+        $bi->save();
+        foreach($data as $de){
+            $dbi = new DetailBallotImport();
+            $dbi->bi_id = $bi->bi_id;
+            $dbi->product_id = $de['product']['product_id'];
+            $dbi->amount = $de['amount'];
+            $dbi->price = $de['price'];
+            $dbi->save();
+        }
         return response()->json(['message'=>'success']);
     }
 }

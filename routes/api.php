@@ -109,6 +109,7 @@ Route::group(["namespace"=>"App\Http\Controllers"],function() {
     Route::any('warehouse/getdetailWH','WarehouseController@getdetailWH');
     Route::any('warehouse/EditWareHouse','WarehouseController@EditWareHouse');
     Route::any('warehouse/Removewh','WarehouseController@Removewh');
+    Route::any('warehouse/importProductWH','WarehouseController@importProductWH');
 
 
     Route::any('supplier/add','SupplierController@add');
