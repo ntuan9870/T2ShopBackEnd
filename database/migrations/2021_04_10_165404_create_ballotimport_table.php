@@ -18,6 +18,8 @@ class CreateBallotimportTable extends Migration
             $table->integer('user_id');
             $table->integer('warehouse_id');
             $table->double('sum_amount');
+            $table->double('sum_product');
+            $table->double('exported');
             $table->timestamps();
         });
     }

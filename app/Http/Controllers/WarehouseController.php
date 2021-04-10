@@ -17,6 +17,7 @@ use App\Models\DetailDeliveryBill;
 use App\Models\Inventory;
 use App\Models\BallotImport;
 use App\Models\DetailBallotImport;
+use App\Models\HangTon;
 use Illuminate\Support\Facades\Validator;
 
 class WarehouseController extends Controller
@@ -363,7 +364,9 @@ class WarehouseController extends Controller
         $bi = new BallotImport();
         $bi->user_id = $request->user_id;
         $bi->warehouse_id = $request->wh_id;
-        $bi->sum_amount = $request->sum_amount; 
+        $bi->sum_amount = $request->sum_amount;
+        $bi->sum_product = $request->sum_product; 
+        $bi->exported = 0; 
         $bi->save();
         foreach($data as $de){
             $dbi = new DetailBallotImport();
@@ -372,7 +375,31 @@ class WarehouseController extends Controller
             $dbi->amount = $de['amount'];
             $dbi->price = $de['price'];
             $dbi->save();
+            $ht = HangTon::where('product_id',$de['product']['product_id'])->first();
+            if(!$ht){
+                $ht = new HangTon();
+                $ht->warehouse_id = $request->wh_id;
+                $ht->product_id = $de['product']['product_id'];
+                $ht->amount = $de['amount'];
+            }else{
+                $ht->amount += $de['amount'];;
+            }
+            $ht->save();
+            $wh = WareHouse::find($request->wh_id);
+            if(!$wh){
+                return response()->json(['error'=>'Đã xảy ra lỗi!']);
+            }
+            $wh->empty = $wh->empty - $bi->sum_product;
+            $wh->save();
         }
         return response()->json(['message'=>'success']);
+    }
+    public function getAllBI(){
+        $bis = BallotImport::all();
+        return response()->json(['message'=>'success', 'bis'=>$bis]);
+    }
+    public function getAllBDIByBIID(Request $request){
+        $dbis = DetailBallotImport::where('bi_id',$request->bi_id)->get();
+        return response()->json(['message'=>'success', 'dbis'=>$dbis]);
     }
 }
