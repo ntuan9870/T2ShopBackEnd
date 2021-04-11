@@ -19,6 +19,7 @@ use App\Models\BallotImport;
 use App\Models\DetailBallotImport;
 use App\Models\HangTon;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\DB;
 
 class WarehouseController extends Controller
 {
@@ -183,6 +184,10 @@ class WarehouseController extends Controller
             array_push($inventory,$amount);
         }
         return response()->json(['product'=>$product,'inventory'=>$inventory]);
+    }
+    public function search2(Request $request){
+        $product= DB::table('hang_ton')->join('products', 'products.product_id','=','hang_ton.product_id')->where('hang_ton.warehouse_id',$request->warehouse_id)->where('products.product_name','LIKE','%'.$request->key.'%')->select('products.*')->get();
+        return response()->json(['message'=>'success','products'=>$product]);
     }
     public function getCategory(){
         $category=Category::all();
@@ -366,7 +371,7 @@ class WarehouseController extends Controller
         $bi->warehouse_id = $request->wh_id;
         $bi->sum_amount = $request->sum_amount;
         $bi->sum_product = $request->sum_product; 
-        $bi->exported = 0; 
+        $bi->supplier_id = $request->supplier_id;
         $bi->save();
         foreach($data as $de){
             $dbi = new DetailBallotImport();
@@ -374,8 +379,9 @@ class WarehouseController extends Controller
             $dbi->product_id = $de['product']['product_id'];
             $dbi->amount = $de['amount'];
             $dbi->price = $de['price'];
+            $dbi->exported = 0; 
             $dbi->save();
-            $ht = HangTon::where('product_id',$de['product']['product_id'])->first();
+            $ht = HangTon::where('product_id',$de['product']['product_id'])->where('warehouse_id',$request->wh_id)->first();
             if(!$ht){
                 $ht = new HangTon();
                 $ht->warehouse_id = $request->wh_id;
@@ -401,5 +407,23 @@ class WarehouseController extends Controller
     public function getAllBDIByBIID(Request $request){
         $dbis = DetailBallotImport::where('bi_id',$request->bi_id)->get();
         return response()->json(['message'=>'success', 'dbis'=>$dbis]);
+    }
+    public function getAllBIEligible(Request $request){
+        $bis = BallotImport::join('detail_ballot_import','ballotimports.bi_id','=','detail_ballot_import.bi_id')->where('ballotimports.warehouse_id',$request->wh_id)->where('detail_ballot_import.product_id',$request->product_id)->get();
+        return response()->json(['message'=>'success', 'bis'=>$bis]);
+    }
+    public function checkOutOfProduct(Request $request){
+        $dbi = DetailBallotImport::where('bi_id',$request->bi_id)->where('product_id',$request->product_id)->first();
+        if(((int)$request->ae+(int)$dbi->exported)>(int)($dbi->amount)){
+            return response()->json(['message'=>'fail']);
+        }
+        return response()->json(['message'=>'success', 'dbi'=>$dbi->amount]);
+    }
+    public function changeAmountElement(Request $request){
+        $dbi = DetailBallotImport::where('bi_id',$request->bi_id)->where('product_id',$request->product_id)->first();
+        if(((int)$request->ae+(int)$dbi->exported)>(int)($dbi->amount)){
+            return response()->json(['message'=>'fail', 'max'=>(int)$dbi->amount-(int)$dbi->exported]);
+        }
+        return response()->json(['message'=>'success', 'dbi'=>$dbi->amount]);
     }
 }
