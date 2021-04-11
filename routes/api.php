@@ -116,6 +116,10 @@ Route::group(["namespace"=>"App\Http\Controllers"],function() {
     Route::any('warehouse/getAllBIEligible','WarehouseController@getAllBIEligible');
     Route::any('warehouse/checkOutOfProduct','WarehouseController@checkOutOfProduct');
     Route::any('warehouse/changeAmountElement','WarehouseController@changeAmountElement');
+    Route::any('warehouse/addBE','WarehouseController@addBE');
+    Route::any('warehouse/getBallotExport','WarehouseController@getBallotExport');
+    Route::any('warehouse/getAllDBEByBEID','WarehouseController@getAllDBEByBEID');
+    Route::any('warehouse/getAllCTPXLN','WarehouseController@getAllCTPXLN');
     
     Route::any('supplier/add','SupplierController@add');
     Route::any('supplier/show','SupplierController@show');

@@ -18,6 +18,10 @@ use App\Models\Inventory;
 use App\Models\BallotImport;
 use App\Models\DetailBallotImport;
 use App\Models\HangTon;
+use App\Models\BallotExport;
+use App\Models\DetailBallotExport;
+use App\Models\CTPX_LN;
+use App\Models\HistoryPrice;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
 
@@ -425,5 +429,58 @@ class WarehouseController extends Controller
             return response()->json(['message'=>'fail', 'max'=>(int)$dbi->amount-(int)$dbi->exported]);
         }
         return response()->json(['message'=>'success', 'dbi'=>$dbi->amount]);
+    }
+    public function addBE(Request $request){
+        $data = json_decode($request->dbes, true);
+        $be = new BallotExport();
+        $be->user_id = $request->user_id;
+        $be->sum_amount = $request->sum_amount;
+        $be->save();
+        foreach($data as $de){
+            $dbe = new DetailBallotExport();
+            $dbe->be_id = $be->be_id;
+            $dbe->product_id = $de['product_id'];
+            $dbe->amount = $de['amount'];
+            $dbe->price = $de['price'];
+            $dbe->save();
+            foreach($de['ctpx_ln'] as $c){
+                $cl = new CTPX_LN();
+                $cl->dbe_id = $dbe['dbe_id'];
+                $cl->bi_id = $c['bi_id'];
+                $cl->amount = $c['amount'];
+                $cl->save();
+                $dbi = DetailBallotImport::where('bi_id',$c['bi_id'])->where('product_id',$de['product_id'])->first();
+                $dbi->exported=$dbi->exported + $c['amount'];
+                $dbi->save();
+                $bi=BallotImport::find($c['bi_id']);
+                $ht = HangTon::where('warehouse_id',$bi->warehouse_id)->where('product_id',$de['product_id'])->first();
+                $ht->amount -=  $c['amount'];
+                $ht->save();
+                $wh=WareHouse::find($bi->warehouse_id);
+                $wh->empty+=$c['amount'];
+                $wh->save();
+            }
+            $hp = new HistoryPrice();
+            $hp->product_id=$de['product_id'];
+            $hp->product_price=$de['price'];
+            $hp->save();
+            $p = product::find($de['product_id']);
+            $p->product_price = $de['price'];
+            $p->product_amount = $p->amount + $de['price'];
+            $p->save();
+        }
+        return response()->json(['message'=>'success']);
+    }
+    public function getBallotExport(){
+        $bes = BallotExport::all();
+        return response()->json(['message'=>'success', 'bes'=>$bes]);
+    }
+    public function getAllDBEByBEID(Request $request){
+        $dbes = DetailBallotExport::where('be_id',$request->be_id)->get();
+        return response()->json(['message'=>'success', 'dbes'=>$dbes]);
+    }
+    public function getAllCTPXLN(Request $request){
+        $dbes = CTPX_LN::where('dbe_id',$request->dbe_id)->get();
+        return response()->json(['message'=>'success', 'dbes'=>$dbes]);
     }
 }
