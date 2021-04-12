@@ -483,4 +483,8 @@ class WarehouseController extends Controller
         $dbes = CTPX_LN::where('dbe_id',$request->dbe_id)->get();
         return response()->json(['message'=>'success', 'dbes'=>$dbes]);
     }
+    public function getAllP(Request $request){
+        $hts = HangTon::join('products','products.product_id','=','hang_ton.product_id')->where('warehouse_id',$request->wh_id)->get();
+        return response()->json(['message'=>'success', 'hts'=>$hts]);
+    }
 }

@@ -120,6 +120,7 @@ Route::group(["namespace"=>"App\Http\Controllers"],function() {
     Route::any('warehouse/getBallotExport','WarehouseController@getBallotExport');
     Route::any('warehouse/getAllDBEByBEID','WarehouseController@getAllDBEByBEID');
     Route::any('warehouse/getAllCTPXLN','WarehouseController@getAllCTPXLN');
+    Route::any('warehouse/getAllP','WarehouseController@getAllP');
     
     Route::any('supplier/add','SupplierController@add');
     Route::any('supplier/show','SupplierController@show');
