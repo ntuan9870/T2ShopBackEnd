@@ -426,6 +426,10 @@ class ProductController extends Controller
         $favoriteProduct->save();
         return response()->json(['message'=>'success']);
     }
+    public function showFavoriteProduct(Request $request){
+        $favoriteProduct=FavoriteProduct::where('user_id','=',$request->user_id)->join('products','products.product_id','=','favoriteproduct.product_id')->get();
+        return response()->json(['favoriteProduct'=>$favoriteProduct]);
+    }
 }
 
 

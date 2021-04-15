@@ -23,6 +23,7 @@ Route::group(["namespace"=>"App\Http\Controllers"],function() {
     Route::any('getidProduct','ProductController@getidProduct');
     Route::any('ckeckid','ProductController@ckeckid');
     Route::any('pushFavoriteProduct','ProductController@pushFavoriteProduct');
+    Route::any('showFavoriteProduct','ProductController@showFavoriteProduct');
     
 
     Route::any('category/add','CategoryController@add');
