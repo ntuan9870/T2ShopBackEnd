@@ -141,7 +141,9 @@ class VoucherController extends Controller
         return response()->json(['message'=>'success']);
     }
     public function getallvoucherforuser(Request $request) {
-        $vs = DB::table('user_voucher')->join('vouchers','user_voucher.voucher_id','=','vouchers.voucher_id')->where('user_id',$request->user_id)->get('*');
+        $dt = Carbon::now('Asia/Ho_Chi_Minh')->format('Y-m-d');
+        $vs = DB::table('user_voucher')->join('vouchers','user_voucher.voucher_id','=','vouchers.voucher_id')->where('user_id',$request->user_id)->where('voucher_start', '<=', $dt)->where('voucher_end', '>=', $dt)->where('voucher_apply','true')->get('*');
         return response()->json(['vouchers'=>$vs]);
+        // return response()->json(['vouchers'=>$dt]);
     }
 }

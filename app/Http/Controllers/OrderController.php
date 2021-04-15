@@ -61,6 +61,7 @@ class OrderController extends Controller
             $uv = new UserVoucher();
             $uv = UserVoucher::where('user_id',$request->user_id)->where('voucher_id',$request->select_voucher)->first();
             $uv->amount_voucher-= 1;
+            $uv->voucher_used+= 1;
             if($uv->amount_voucher==0){
                 $uv->delete();
             }
@@ -83,7 +84,7 @@ class OrderController extends Controller
             //     $pro->delete();
             // }
         }
-        $user = DB::table('user')->where('user_id',$request->user_id)->first();
+        $user = User::find($request->user_id);
         $_SESSION['email'] = $user->user_email;
         $data2 = [
             'data' => $data,
@@ -99,6 +100,9 @@ class OrderController extends Controller
             $message->to($_SESSION['email']);
             $message->subject('Cảm ơn quí khách đã đặt hàng!');
         });
+        $user->voucher_accumulation+=5;
+        $user->voucher_user_score+=5;
+        $user->save();
         return response()->json(['success'=>'Xác nhận thanh toán thành công!']);
     }
     // public function add(Request $request){
