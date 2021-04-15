@@ -434,6 +434,15 @@ class ProductController extends Controller
         FavoriteProduct::find($request->FP_id)->delete();
         return response()->json(['message'=>'success']);
     }
+    public function getFavoriteProduct(Request $request){
+        $favoriteProduct=FavoriteProduct::where('user_id','=',$request->user_id)->join('products','products.product_id','=','favoriteproduct.product_id')->get();
+        $promotions=array();
+        foreach($favoriteProduct as $f){
+            $promotion = Promotion::find($f->product_promotion);
+            array_push($promotions,$promotion);
+        }
+        return response()->json(['products'=>$favoriteProduct,'promotions'=>$promotions]);
+    }
     
 }
 

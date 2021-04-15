@@ -25,6 +25,7 @@ Route::group(["namespace"=>"App\Http\Controllers"],function() {
     Route::any('pushFavoriteProduct','ProductController@pushFavoriteProduct');
     Route::any('showFavoriteProduct','ProductController@showFavoriteProduct');
     Route::any('removeFavoriteProduct','ProductController@removeFavoriteProduct');
+    Route::any('getFavoriteProduct','ProductController@getFavoriteProduct');
     
 
     Route::any('category/add','CategoryController@add');
