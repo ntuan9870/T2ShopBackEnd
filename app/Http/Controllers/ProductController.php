@@ -430,6 +430,11 @@ class ProductController extends Controller
         $favoriteProduct=FavoriteProduct::where('user_id','=',$request->user_id)->join('products','products.product_id','=','favoriteproduct.product_id')->get();
         return response()->json(['favoriteProduct'=>$favoriteProduct]);
     }
+    public function removeFavoriteProduct(Request $request){
+        FavoriteProduct::find($request->FP_id)->delete();
+        return response()->json(['message'=>'success']);
+    }
+    
 }
 
 
