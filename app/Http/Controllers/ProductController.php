@@ -443,6 +443,12 @@ class ProductController extends Controller
         }
         return response()->json(['products'=>$favoriteProduct,'promotions'=>$promotions]);
     }
+    public function getFavorite(Request $request){
+        $favoriteProduct=FavoriteProduct::where('user_id','=',$request->user_id)->where('product_id',$request->product_id)->get();
+        if($favoriteProduct){
+            return response()->json(['favoriteProduct'=>$favoriteProduct]);
+        }
+    }
     
 }
 
