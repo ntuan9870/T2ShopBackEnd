@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Validator;
 use App\Models\Promotion;
 use App\Models\Warehouse;
 use App\Models\ProductWH;
+use App\Models\FavoriteProduct;
 
 class ProductController extends Controller
 {
@@ -416,6 +417,14 @@ class ProductController extends Controller
     public function getidProduct(Request $request){
         $productWH=ProductWH::where('cate_id',$request->id)->get();
         return response()->json(['message'=>'success','productWH'=>$productWH]);
+    }
+    public function pushFavoriteProduct(Request $request){
+        $favoriteProduct=new FavoriteProduct();
+        $favoriteProduct->user_id=$request->user_id;
+        $favoriteProduct->product_id=$request->product_id;
+        $favoriteProduct->FP_status=1;
+        $favoriteProduct->save();
+        return response()->json(['message'=>'success']);
     }
 }
 

@@ -50,18 +50,6 @@ class PromotionController extends Controller
     }
     public function getproduct(){
         $products=Promotion::where('promotion_status','=',1)->join('products','products.product_promotion','=','promotion.promotion_id')->orderBy('promotion_infor','desc')->limit(5)->get();
-        // $products=array();
-        // foreach($promotion1 as $p){
-        //     $product=product::where('product_promotion','=',$p->promotion_id)->get();
-        //     array_push($products,$product);
-        // }
-        // $promotions = array();
-        // for($i=0; $i<count($products);$i++){
-        //     foreach($products[$i] as $pr){
-        //         $promotion = Promotion::find($pr->product_promotion);
-        //         array_push($promotions,$promotion);
-        //     }
-        // }
         return response()->json(['products'=>$products]);
     }
 }
