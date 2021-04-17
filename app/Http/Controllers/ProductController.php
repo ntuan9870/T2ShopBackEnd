@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Validator;
 use App\Models\Promotion;
 use App\Models\Warehouse;
 use App\Models\ProductWH;
+use App\Models\FavoriteProduct;
 
 class ProductController extends Controller
 {
@@ -417,6 +418,7 @@ class ProductController extends Controller
         $productWH=ProductWH::where('cate_id',$request->id)->get();
         return response()->json(['message'=>'success','productWH'=>$productWH]);
     }
+<<<<<<< HEAD
     public function checkSameName(Request $request){
         $product=Product::where('product_name',$request->product_name)->first();
         if($product){
@@ -424,6 +426,40 @@ class ProductController extends Controller
         }
         return response()->json(['message'=>'notsame']);
     }
+=======
+    public function pushFavoriteProduct(Request $request){
+        $favoriteProduct=new FavoriteProduct();
+        $favoriteProduct->user_id=$request->user_id;
+        $favoriteProduct->product_id=$request->product_id;
+        $favoriteProduct->FP_status=1;
+        $favoriteProduct->save();
+        return response()->json(['message'=>'success']);
+    }
+    public function showFavoriteProduct(Request $request){
+        $favoriteProduct=FavoriteProduct::where('user_id','=',$request->user_id)->join('products','products.product_id','=','favoriteproduct.product_id')->get();
+        return response()->json(['favoriteProduct'=>$favoriteProduct]);
+    }
+    public function removeFavoriteProduct(Request $request){
+        FavoriteProduct::find($request->FP_id)->delete();
+        return response()->json(['message'=>'success']);
+    }
+    public function getFavoriteProduct(Request $request){
+        $favoriteProduct=FavoriteProduct::where('user_id','=',$request->user_id)->join('products','products.product_id','=','favoriteproduct.product_id')->get();
+        $promotions=array();
+        foreach($favoriteProduct as $f){
+            $promotion = Promotion::find($f->product_promotion);
+            array_push($promotions,$promotion);
+        }
+        return response()->json(['products'=>$favoriteProduct,'promotions'=>$promotions]);
+    }
+    public function getFavorite(Request $request){
+        $favoriteProduct=FavoriteProduct::where('user_id','=',$request->user_id)->where('product_id',$request->product_id)->get();
+        if($favoriteProduct){
+            return response()->json(['favoriteProduct'=>$favoriteProduct]);
+        }
+    }
+    
+>>>>>>> 4309ac57881815b7c1b25e86fe80e8e9dcbe1054
 }
 
 
