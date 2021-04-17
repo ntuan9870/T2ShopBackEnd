@@ -392,14 +392,14 @@ class WarehouseController extends Controller
                 $ht->product_id = $de['product']['product_id'];
                 $ht->amount = $de['amount'];
             }else{
-                $ht->amount += $de['amount'];;
+                $ht->amount += $de['amount'];
             }
             $ht->save();
             $wh = WareHouse::find($request->wh_id);
             if(!$wh){
                 return response()->json(['error'=>'Đã xảy ra lỗi!']);
             }
-            $wh->empty = $wh->empty - $bi->sum_product;
+            $wh->empty = $wh->empty - $de['amount'];
             $wh->save();
         }
         return response()->json(['message'=>'success']);
@@ -466,7 +466,7 @@ class WarehouseController extends Controller
             $hp->save();
             $p = product::find($de['product_id']);
             $p->product_price = $de['price'];
-            $p->product_amount = $p->amount + $de['price'];
+            $p->product_amount = $p->product_amount + $de['amount'];
             $p->save();
         }
         return response()->json(['message'=>'success']);
