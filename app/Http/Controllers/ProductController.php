@@ -418,7 +418,6 @@ class ProductController extends Controller
         $productWH=ProductWH::where('cate_id',$request->id)->get();
         return response()->json(['message'=>'success','productWH'=>$productWH]);
     }
-<<<<<<< HEAD
     public function checkSameName(Request $request){
         $product=Product::where('product_name',$request->product_name)->first();
         if($product){
@@ -426,7 +425,6 @@ class ProductController extends Controller
         }
         return response()->json(['message'=>'notsame']);
     }
-=======
     public function pushFavoriteProduct(Request $request){
         $favoriteProduct=new FavoriteProduct();
         $favoriteProduct->user_id=$request->user_id;
@@ -459,7 +457,6 @@ class ProductController extends Controller
         }
     }
     
->>>>>>> 4309ac57881815b7c1b25e86fe80e8e9dcbe1054
 }
 
 
