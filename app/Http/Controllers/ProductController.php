@@ -104,11 +104,11 @@ class ProductController extends Controller
             return response()->json(['error'=>$validator->errors()->all()],409);
         }
         $filename= $request->img->getClientOriginalName();
-        $product=ProductWH::where('prod_id',$request->product_id)->first();
+        // $product=ProductWH::where('prod_id',$request->product_id)->first();
         $p = new product();
-        $p->product_id = $request->product_id;
-        $p->product_name = $product->prod_name;
-        $p->product_price = $product->prod_price;
+        // $p->product_id = $request->product_id;
+        $p->product_name = $request->product_name;
+        $p->product_price = $request->product_price;
         if($request->warranty!=null){
             $p->product_warranty = $request->warranty;
         }else{
@@ -120,7 +120,7 @@ class ProductController extends Controller
             $p->product_accessories = 'Không';
         }
         $p->product_condition = $request->condition;
-        if($request->promotion!=null){
+        if($request->promotion!='null'){
             $p->product_promotion = $request->promotion;
         }else{
             $p->product_promotion = 0;
@@ -130,7 +130,7 @@ class ProductController extends Controller
         $p->product_amount = $request->amount;
         $p->product_cate = $request->cate;
         $p->product_img = "http://localhost:8000/storage/prodimages/".$filename;
-        $request->img->storeAs('prodimages',$filename);
+        $request->img->storeAs('/prodimages',$filename);
         $p->save();
         return response()->json(['message'=>"Thêm sản phẩm thành công!"]);
     }
@@ -416,6 +416,13 @@ class ProductController extends Controller
     public function getidProduct(Request $request){
         $productWH=ProductWH::where('cate_id',$request->id)->get();
         return response()->json(['message'=>'success','productWH'=>$productWH]);
+    }
+    public function checkSameName(Request $request){
+        $product=Product::where('product_name',$request->product_name)->first();
+        if($product){
+            return response()->json(['message'=>'same']);
+        }
+        return response()->json(['message'=>'notsame']);
     }
 }
 
