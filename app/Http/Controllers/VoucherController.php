@@ -146,4 +146,8 @@ class VoucherController extends Controller
         return response()->json(['vouchers'=>$vs]);
         // return response()->json(['vouchers'=>$dt]);
     }
+    public function getdetailvoucher(Request $request){
+        $voucher=Voucher::where('voucher_id',$request->voucher_id)->get();
+        return response()->json(['voucher'=>$voucher]);
+    }
 }

@@ -152,6 +152,7 @@ Route::group(["namespace"=>"App\Http\Controllers"],function() {
     Route::any('voucher/removeUserFromVoucher','VoucherController@removeUserFromVoucher');
     Route::any('voucher/removeVoucher','VoucherController@removeVoucher');
     Route::any('voucher/getallvoucherforuser','VoucherController@getallvoucherforuser');
+    Route::any('voucher/getdetailvoucher','VoucherController@getdetailvoucher');
 
     Route::any('admin/gethome','AdminController@gethome');
 
