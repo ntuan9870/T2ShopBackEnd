@@ -181,7 +181,13 @@ Route::group(["namespace"=>"App\Http\Controllers"],function() {
     Route::any('recommened/add','RecommendedController@add');
     Route::any('recommened/getrecommened','RecommendedController@getrecommened');
     Route::any('recommened/showCate','RecommendedController@showCate');
-    
 
+    Route::any('store/addStore','StoreController@addStore');
+    Route::any('store/checkSameName','StoreController@checkSameName');
+    Route::any('store/checkSameAddress','StoreController@checkSameAddress');
+    Route::any('store/showStore','StoreController@showStore');
+    Route::any('store/changeStatus','StoreController@changeStatus');
+    Route::any('store/getStore','StoreController@getStore');
+    Route::any('store/editStore','StoreController@editStore');
 });
 
