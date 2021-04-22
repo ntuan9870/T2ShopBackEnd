@@ -148,6 +148,7 @@ class VoucherController extends Controller
     }
     public function getdetailvoucher(Request $request){
         $voucher=Voucher::where('voucher_id',$request->voucher_id)->get();
-        return response()->json(['voucher'=>$voucher]);
+        $user_voucher=DB::table('user_voucher')->where('user_id','=',$request->user_id)->where('voucher_id','=',$request->voucher_id)->get();
+        return response()->json(['voucher'=>$voucher,'user_voucher'=>$user_voucher]);
     }
 }
