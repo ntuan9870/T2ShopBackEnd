@@ -76,14 +76,8 @@ class OrderController extends Controller
             $orderitem->product_promotion = $prod['promotion'];
             $orderitem->order_id = $order->order_id;
             $orderitem->save();
-            // $pro = product::find($prod['product']['product_id']);
-            // $n = NumberOfProduct::where('product_id',$prod['product']['product_id'])->first('*');
-            // $n->product_amount -= $prod['num'];
-            // $pro->save();
-            // if($pro->product_amount==0){
-            //     $pro->delete();
-            // }
         }
+
         $user = User::find($request->user_id);
         $_SESSION['email'] = $user->user_email;
         $data2 = [
@@ -103,74 +97,32 @@ class OrderController extends Controller
         $user->voucher_accumulation+=5;
         $user->voucher_user_score+=5;
         $user->save();
+        
+        $dt = Carbon::now('Asia/Ho_Chi_Minh')->format('Y-m-d');
+        $voucher=Voucher::where('voucher_id',4)->where('voucher_start', '<=', $dt)->where('voucher_end', '>=', $dt)->where('voucher_apply','true')->first();
+        if( $voucher){
+            $sum=0;
+            $user_voucher=UserVoucher::where('voucher_id',4)->get();
+            foreach($user_voucher as $uv){
+                $sum+=$uv->amount_voucher;
+            }
+            if($voucher->voucher_total-$sum>0){
+                $amountUser=UserVoucher::where('voucher_id',4)->where('user_id',$request->user_id)->first();
+                if(isset($amountUser)){
+                    $amountUser->amount_voucher+=1;
+                    $amountUser->save();
+                }else{
+                    $newUV= new UserVoucher();
+                    $newUV->voucher_id=4;
+                    $newUV->user_id=$request->user_id;
+                    $newUV->amount_voucher=1;
+                    $newUV->save();
+                }
+            }
+        }
         return response()->json(['success'=>'Xác nhận thanh toán thành công!']);
     }
-    // public function add(Request $request){
-    //     $validate = Validator::make($request->all(),
-    //     [
-    //         'user_id'=>'required',
-    //         'user_name'=>'required',
-    //         'user_email'=>'required|email',
-    //         'user_phone'=>'required',
-    //         'user_address'=>'required',
-    //         'total'=>'required'
-    //     ],
-    //     [
-    //         'user_id.required'=>'Id là bắt buộc',
-    //         'user_name.required'=>'Họ và tên là trường bắt buộc!',
-    //         'user_email.required'=>'Email là trường bắt buộc!',
-    //         'user_email.email'=>'Vui lòng nhập email đúng định dạng',
-    //         'user_address.required'=>'Địa chỉ là trường bắt buộc!',
-    //         'total.required'=>'Tổng tiền là bắt buộc'
-    //     ]);
-    //     if($validate->failed()){
-    //         return response()->json('error','Lỗi');
-    //     }
-    //     $data = json_decode($request->cart, true);
-    //     $order = new Order();
-    //     $order->user_id = $request->user_id;
-    //     $u = new User();
-    //     $u = User::find($request->user_id);
-    //     $order->phone = $request->user_phone;
-    //     $u->user_phone = '12121222';
-    //     $u->save();
-    //     $order->address = $request->user_address;
-    //     $order->total = $request->total;
-    //     $order->save();
-    //     // $data2 = array();
-    //     foreach($data as $prod){
-    //         $orderitem = new OrderItem();
-    //         $orderitem->product_id = $prod['product']['product_id'];
-    //         $orderitem->product_price = $prod['product']['product_price'];
-    //         $orderitem->product_amount = $prod['num'];
-    //         $orderitem->order_id = $order->order_id;
-    //         $orderitem->save();
-    //         $pro = product::find($prod['product']['product_id']);
-    //         $pro->product_amount -= $prod['num'];
-    //         $pro->save();
-    //         if($pro->product_amount==0){
-    //             $pro->delete();
-    //         }
-    //         // array_push($data2,$orderitem);
-    //     }
-    //     $user = DB::table('user')->where('user_id',$request->user_id)->first();
-
-    //     $_SESSION['email'] = $user->user_email;
-    //     $data2 = [
-    //         'data' => $data,
-    //         'user_name'=>$u->user_name,
-    //         'user_email'=>$u->user_email,
-    //         'user_phone'=>$u->user_phone,
-    //         'user_address'=>$request->user_address,
-    //         'order_id'=>$order->order_id
-    //     ];
-    //     Mail::send('mailorder', $data2, function($message){
-    //         $message->from('ntuan9870@gmail.com', 'T2Shop');
-    //         $message->to($_SESSION['email']);
-    //         $message->subject('Cảm ơn quí khách đã đặt hàng!');
-    //     });
-    //     return response()->json(['success'=>'Xác nhận thanh toán thành công!']);
-    // }
+   
 
     public function getmomo(){
         $momoUrl = 'https://test-payment.momo.vn/gw_payment/payment/qr?';

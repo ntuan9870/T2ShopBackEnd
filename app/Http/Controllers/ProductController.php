@@ -12,6 +12,8 @@ use App\Models\Promotion;
 use App\Models\Warehouse;
 use App\Models\ProductWH;
 use App\Models\FavoriteProduct;
+use App\Models\User;
+use Illuminate\Support\Facades\Mail;
 
 class ProductController extends Controller
 {
@@ -183,13 +185,23 @@ class ProductController extends Controller
             $request->product_img->storeAs('prodimages',$filename);
             $p->save();
         }
-        //upload ảnh
-        // $url="http://localhost:8000/storage/";
-        // $file = $request->file('img ');
-        // $extension = $file->getClientOriginalExtension();
-        // $path = $request->file('img')->storeAs('proimages/',$p->id.'.'.$extension);
-        // $p->img=$url.$path;
-        // $p->save();
+        // $favoriteProduct = FavoriteProduct::where('product_id',$request->product_id)->get();
+        // if($favoriteProduct){
+        //     foreach($favoriteProduct as $fd){
+        //         $user=User::where('user_id',$fd->user_id)->first();
+        //         $_SESSION['email'] = $user->user_email;
+        //         $data = [
+        //             'user_name'=>$user->user_name,
+        //             'user_email'=>$user->user_email,
+        //             'user_phone'=>$user->user_phone
+        //         ];
+        //         Mail::send('favoriteproduct', $data, function($message){
+        //             $message->from('ntuan9870@gmail.com', 'T2Shop');
+        //             $message->to($_SESSION['email']);
+        //             $message->subject('Thông báo thông tin về sản phẩm yêu thích');
+        //         });
+        //     }
+        // }
         return response()->json(['success'=>'Cập nhật sản phẩm thành công!']);
     }
     public function delete(Request $request){
