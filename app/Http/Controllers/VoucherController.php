@@ -50,6 +50,7 @@ class VoucherController extends Controller
         $v->voucher_start = $request->voucher_start;
         $v->voucher_end = $request->voucher_end;
         $v->voucher_apply = $request->voucher_apply;
+        $v->voucher_total = $request->voucher_total;
         $v->save();
         return response()->json(['message'=>'success']);
     }
@@ -150,5 +151,14 @@ class VoucherController extends Controller
         $voucher=Voucher::where('voucher_id',$request->voucher_id)->get();
         $user_voucher=DB::table('user_voucher')->where('user_id','=',$request->user_id)->where('voucher_id','=',$request->voucher_id)->get();
         return response()->json(['voucher'=>$voucher,'user_voucher'=>$user_voucher]);
+    }
+
+    public function getSumVoucherUser(Request $request){
+        $sum=0;
+        $uservoucher = UserVoucher::where('voucher_id',$request->voucher_id)->get();
+        foreach($uservoucher as $uv){
+            $sum+=$uv->amount_voucher;
+        }
+        return response()->json(['sum'=>$sum]);
     }
 }
