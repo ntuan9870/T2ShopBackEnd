@@ -22,6 +22,7 @@ use App\Models\BallotExport;
 use App\Models\DetailBallotExport;
 use App\Models\CTPX_LN;
 use App\Models\HistoryPrice;
+use App\Models\StoreWHInventory;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
 
@@ -464,10 +465,20 @@ class WarehouseController extends Controller
             $hp->product_id=$de['product_id'];
             $hp->product_price=$de['price'];
             $hp->save();
-            $p = product::find($de['product_id']);
-            $p->product_price = $de['price'];
-            $p->product_amount = $p->product_amount + $de['amount'];
-            $p->save();
+            // $p = product::find($de['product_id']);
+            // $p->product_price = $de['price'];
+            // $p->product_amount = $p->product_amount + $de['amount'];
+            // $p->save();
+            $storeInventory = StoreWHInventory::where('product_id',$de['product_id'])->first();
+            if($storeInventory){
+                $storeInventory->amount += $de['amount'];
+            }else{
+                $storeInventory = new StoreWHInventory();
+                $storeInventory->store_wh_id = $request->store_wh_id;
+                $storeInventory->product_id = $de['product_id'];
+                $storeInventory->amount = $de['amount'];
+            }
+            $storeInventory->save();
         }
         return response()->json(['message'=>'success']);
     }
@@ -486,5 +497,9 @@ class WarehouseController extends Controller
     public function getAllP(Request $request){
         $hts = HangTon::join('products','products.product_id','=','hang_ton.product_id')->where('warehouse_id',$request->wh_id)->get();
         return response()->json(['message'=>'success', 'hts'=>$hts]);
+    }
+    public function getAllDBIByProductId(Request $request){
+        $dbis = DetailBallotImport::where('product_id',$request->product_id)->orderBy('created_at', 'asc')->get();
+        return response()->json(['message'=>'success', 'dbis'=>$dbis]);
     }
 }

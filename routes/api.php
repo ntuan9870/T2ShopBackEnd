@@ -128,6 +128,7 @@ Route::group(["namespace"=>"App\Http\Controllers"],function() {
     Route::any('warehouse/getAllDBEByBEID','WarehouseController@getAllDBEByBEID');
     Route::any('warehouse/getAllCTPXLN','WarehouseController@getAllCTPXLN');
     Route::any('warehouse/getAllP','WarehouseController@getAllP');
+    Route::any('warehouse/getAllDBIByProductId','WarehouseController@getAllDBIByProductId');
     
     Route::any('supplier/add','SupplierController@add');
     Route::any('supplier/show','SupplierController@show');
@@ -188,5 +189,12 @@ Route::group(["namespace"=>"App\Http\Controllers"],function() {
     Route::any('store/changeStatus','StoreController@changeStatus');
     Route::any('store/getStore','StoreController@getStore');
     Route::any('store/editStore','StoreController@editStore');
+    Route::any('store/getAllProductInWH','StoreController@getAllProductInWH');
+    Route::any('store/showStoreWarehouse','StoreController@showStoreWarehouse');
+    Route::any('store/addStoreWareHouse','StoreController@addStoreWareHouse');
+    Route::any('store/getStoreWarehouseByID','StoreController@getStoreWarehouseByID');
+    Route::any('store/editWH','StoreController@editWH');
+    Route::any('store/getAllP','StoreController@getAllP');
+    Route::any('store/getAllStoreWarehouseByStoreID','StoreController@getAllStoreWarehouseByStoreID');
 });
 
