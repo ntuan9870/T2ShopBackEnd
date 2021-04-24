@@ -23,6 +23,7 @@ use App\Models\DetailBallotExport;
 use App\Models\CTPX_LN;
 use App\Models\HistoryPrice;
 use App\Models\StoreWHInventory;
+use App\Models\StoreWarehouse;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
 
@@ -479,6 +480,9 @@ class WarehouseController extends Controller
                 $storeInventory->amount = $de['amount'];
             }
             $storeInventory->save();
+            $store_wh = StoreWarehouse::where('store_wh_id',$storeInventory->store_wh_id)->first();
+            $store_wh->wh_empty-=$de['amount'];
+            $store_wh->save();
         }
         return response()->json(['message'=>'success']);
     }

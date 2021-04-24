@@ -204,7 +204,7 @@ class OrderController extends Controller
 
     public function getvnpay(Request $request){
         $vnp_Url = "http://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
-        $vnp_Returnurl = "http://localhost:4200/cart/complete";
+        $vnp_Returnurl = "http://localhost:4200/cart/thanhtoan/null";
         $vnp_TmnCode = "M8DBK8I0";//Mã website tại VNPAY
         $vnp_HashSecret = "YUFRDGQABQULFNZCGICWZGNOQXUEKUDU"; //Chuỗi bí mật
         $vnp_TxnRef = date('YmdHis');//Mã đơn hàng. Trong thực tế Merchant cần insert đơn hàng vào DB và gửi mã này sang VNPAY
@@ -250,7 +250,7 @@ class OrderController extends Controller
             $vnpSecureHash = hash('sha256',$vnp_HashSecret . $hashdata);
             $vnp_Url .= 'vnp_SecureHashType=SHA256&vnp_SecureHash=' . $vnpSecureHash;
         }
-        $this->add($request);
+        // $this->add($request);
         return response()->json(['message'=>'success','checkouturl'=>$vnp_Url]);
     }
 
