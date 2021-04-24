@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\product;
+use App\Models\StoreWHInventory;
+use App\Models\StoreWarehouse;
 use Gloudemans\Shoppingcart\Facades\Cart;
 use Illuminate\Http\Request;
 
@@ -17,8 +19,33 @@ class CartController extends Controller
         $cart = Cart::content();
         return response()->json(['cart'=>$cart]);
     }
-   
-	
+    public function checkChangeStore(Request $request){
+        $data = json_decode($request->cart, true);
+        $message = array();
+        $max = array();
+        foreach($data as $prod){
+            $store_wh = StoreWarehouse::where('store_id', $request->store_id)->get();
+            $tmp = 0;
+            foreach($store_wh as $st_wh){
+                $store_wh_inventory = StoreWHInventory::where('product_id',$prod['product']['product_id'])->where('store_wh_id',$st_wh->store_wh_id)->first();
+                if($store_wh_inventory){
+                    $tmp += $store_wh_inventory->amount;
+                }
+            }
+            if( $tmp!=0){
+                if($tmp>=$prod['num']){
+                    array_push($message,'true');
+                }else{
+                    array_push($message,'false');
+                }
+            }else{
+                array_push($message,'false');
+            }
+            array_push($max, $tmp);
+            // array_push($message, count($store_wh));
+        }
+        return response()->json(['message'=>$message, 'max'=>$max]);
+    }
     public function postvnpay(Request $request){
         $vnp_Url = "http://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
         $vnp_Returnurl = "http://localhost:4200/cart/complete";

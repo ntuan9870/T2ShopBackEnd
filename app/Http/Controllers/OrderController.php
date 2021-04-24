@@ -16,6 +16,8 @@ use App\Models\UserVoucher;
 use App\Models\Voucher;
 use App\Models\Ship;
 use App\Models\Shipper;
+use App\Models\StoreWHInventory;
+use App\Models\StoreWarehouse;
 
 class OrderController extends Controller
 {
@@ -55,6 +57,7 @@ class OrderController extends Controller
         $order->total = $request->total;
         $order->form = $request->form;
         $order->ship = 0;
+        $order->store_id =  $request->store_id;
         if($request->select_voucher!='null'){
             $order->voucher_id = $request->select_voucher;
             $voucher = Voucher::find($request->select_voucher);
@@ -75,6 +78,24 @@ class OrderController extends Controller
             $orderitem->product_amount = $prod['num'];
             $orderitem->product_promotion = $prod['promotion'];
             $orderitem->order_id = $order->order_id;
+            $store_wh = StoreWarehouse::where('store_id', $request->store_id)->get();
+            $n = $prod['num'];
+            foreach($store_wh as $st_wh){
+                $store_wh_inventory = StoreWHInventory::where('product_id',$prod['product']['product_id'])->where('store_wh_id',$st_wh->store_wh_id)->first();
+                if($store_wh_inventory){
+                    if($store_wh_inventory->amount>$n){
+                        $store_wh_inventory->amount-=$n;
+                        $store_wh_inventory->save();
+                        $st_wh->wh_empty +=$n;
+                        $st_wh->save();
+                    }else{
+                        $n-=$store_wh_inventory->amount;
+                        $store_wh_inventory->delete();
+                        $st_wh->wh_empty += $store_wh_inventory->amount;
+                        $st_wh->save();
+                    }
+                }
+            }
             $orderitem->save();
         }
 

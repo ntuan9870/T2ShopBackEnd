@@ -469,7 +469,7 @@ class WarehouseController extends Controller
             // $p->product_price = $de['price'];
             // $p->product_amount = $p->product_amount + $de['amount'];
             // $p->save();
-            $storeInventory = StoreWHInventory::where('product_id',$de['product_id'])->first();
+            $storeInventory = StoreWHInventory::where('product_id',$de['product_id'])->where('store_wh_id',$request->store_wh_id)->first();
             if($storeInventory){
                 $storeInventory->amount += $de['amount'];
             }else{

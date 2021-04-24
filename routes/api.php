@@ -10,6 +10,7 @@ Route::group(["namespace"=>"App\Http\Controllers"],function() {
     Route::any('show','ProductController@show');
     Route::any('getEditProduct','ProductController@getEditProduct');
     Route::any('getEditProduct1','ProductController@getEditProduct1');
+    Route::any('getInforProduct','ProductController@getInforProduct');
     Route::any('getNewProduct','ProductController@getNewProduct');
     Route::any('getFeaturedProduct','ProductController@getFeaturedProduct');
     Route::any('getComment','ProductController@getComment'); 
@@ -55,6 +56,7 @@ Route::group(["namespace"=>"App\Http\Controllers"],function() {
 
     Route::any('cart/add','CartController@add'); 
     Route::any('cart/show','CartController@show');
+    Route::any('cart/checkChangeStore','CartController@checkChangeStore');
 
     Route::any('vnpay','CartController@postvnpay');
 
