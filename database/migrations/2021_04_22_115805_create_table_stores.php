@@ -20,6 +20,8 @@ class CreateTableStores extends Migration
             $table->string('store_ward');
             $table->string('store_district');
             $table->integer('store_status');
+            // $table->integer('wh_capacity');
+            // $table->integer('wh_empty');
             $table->timestamps();
         });
     }

@@ -10,6 +10,7 @@ Route::group(["namespace"=>"App\Http\Controllers"],function() {
     Route::any('show','ProductController@show');
     Route::any('getEditProduct','ProductController@getEditProduct');
     Route::any('getEditProduct1','ProductController@getEditProduct1');
+    Route::any('getInforProduct','ProductController@getInforProduct');
     Route::any('getNewProduct','ProductController@getNewProduct');
     Route::any('getFeaturedProduct','ProductController@getFeaturedProduct');
     Route::any('getComment','ProductController@getComment'); 
@@ -56,6 +57,7 @@ Route::group(["namespace"=>"App\Http\Controllers"],function() {
 
     Route::any('cart/add','CartController@add'); 
     Route::any('cart/show','CartController@show');
+    Route::any('cart/checkChangeStore','CartController@checkChangeStore');
 
     Route::any('vnpay','CartController@postvnpay');
 
@@ -129,6 +131,7 @@ Route::group(["namespace"=>"App\Http\Controllers"],function() {
     Route::any('warehouse/getAllDBEByBEID','WarehouseController@getAllDBEByBEID');
     Route::any('warehouse/getAllCTPXLN','WarehouseController@getAllCTPXLN');
     Route::any('warehouse/getAllP','WarehouseController@getAllP');
+    Route::any('warehouse/getAllDBIByProductId','WarehouseController@getAllDBIByProductId');
     
     Route::any('supplier/add','SupplierController@add');
     Route::any('supplier/show','SupplierController@show');
@@ -190,5 +193,12 @@ Route::group(["namespace"=>"App\Http\Controllers"],function() {
     Route::any('store/changeStatus','StoreController@changeStatus');
     Route::any('store/getStore','StoreController@getStore');
     Route::any('store/editStore','StoreController@editStore');
+    Route::any('store/getAllProductInWH','StoreController@getAllProductInWH');
+    Route::any('store/showStoreWarehouse','StoreController@showStoreWarehouse');
+    Route::any('store/addStoreWareHouse','StoreController@addStoreWareHouse');
+    Route::any('store/getStoreWarehouseByID','StoreController@getStoreWarehouseByID');
+    Route::any('store/editWH','StoreController@editWH');
+    Route::any('store/getAllP','StoreController@getAllP');
+    Route::any('store/getAllStoreWarehouseByStoreID','StoreController@getAllStoreWarehouseByStoreID');
 });
 

@@ -13,6 +13,9 @@ use App\Models\Warehouse;
 use App\Models\ProductWH;
 use App\Models\FavoriteProduct;
 use App\Models\User;
+use App\Models\StoreWHInventory;
+use App\Models\HangTon;
+use App\Models\StoreWarehouse;
 use Illuminate\Support\Facades\Mail;
 
 class ProductController extends Controller
@@ -86,7 +89,7 @@ class ProductController extends Controller
             'condition' => 'required',
             'description' => 'required',
             'featured' => 'required',
-            'amount'=>'required|gte:0',
+            // 'amount'=>'required|gte:0',
             'cate' => 'required'
         ],[
             'product_id.unique' => 'Mã sản phẩm đã tồn tại !',
@@ -96,7 +99,7 @@ class ProductController extends Controller
             'img.image'=>'Vui lòng nhập đúng định dạng ảnh!',
             // 'warranty.required' => 'Bảo hành là trường bắt buộc!',
             'amount.gte' => 'Số lượng phải lớn hơn 0!',
-            'amount.required' => 'Số lượng là trường bắt buộc!',
+            // 'amount.required' => 'Số lượng là trường bắt buộc!',
             // 'accessories.required' => 'Phụ kiện là trường bắt buộc!',
             'condition.required' => 'Trạng thái là trường bắt buộc!',
             'description.required' => 'Mô tả là trường bắt buộc!',
@@ -130,7 +133,7 @@ class ProductController extends Controller
         }
         $p->product_description = $request->description;
         $p->product_featured = $request->featured;
-        $p->product_amount = $request->amount;
+        // $p->product_amount = $request->amount;
         $p->product_cate = $request->cate;
         $p->product_img = "http://localhost:8000/storage/prodimages/".$filename;
         $request->img->storeAs('/prodimages',$filename);
@@ -149,7 +152,7 @@ class ProductController extends Controller
             'product_condition' => 'required',
             'product_description' => 'required',
             'product_featured' => 'required',
-            'product_amount' => 'required',
+            // 'product_amount' => 'required',
             'product_cate' => 'required',
         ]);
         if($validator->fails()){
@@ -171,7 +174,7 @@ class ProductController extends Controller
         $p->product_condition = $request->product_condition;
         $p->product_description = $request->product_description;
         $p->product_featured = $request->product_featured;
-        $p->product_amount = $request->product_amount;
+        // $p->product_amount = $request->product_amount;
         $p->product_cate = $request->product_cate;
         if($request->product_promotion!=null){
             $p->product_promotion = $request->product_promotion;
@@ -288,7 +291,30 @@ class ProductController extends Controller
             $promotion = Promotion::find($product->product_promotion); 
             // array_push($promotion,$p);
         // }
-        return response()->json(['product'=>$product,'promotion'=>$promotion]);
+        $a = StoreWHInventory::where('product_id',$request->id)->sum('amount');
+        $b = HangTon::where('product_id', $request->id)->sum('amount');
+        $s = $a+$b;    
+        return response()->json(['product'=>$product,'promotion'=>$promotion, 'amountmax'=>$s]);
+    }
+    public function getInforProduct(Request $request){
+        $product = product::where('product_id',$request->id)->join('categories','products.product_cate','=','categories.category_id')->first();
+        // $promotions = array();
+        // foreach($p as $p1){promotion
+            $promotion = Promotion::find($product->product_promotion); 
+            // array_push($promotion,$p);
+        // }
+        $a = StoreWHInventory::where('product_id',$request->id)->sum('amount');
+        $b = HangTon::where('product_id', $request->id)->sum('amount');
+        $s = $a+$b;    
+        $store_wh = StoreWarehouse::where('store_id', $request->store_id)->get();
+        $tmp = 0;
+        foreach($store_wh as $st_wh){
+            $store_wh_inventory = StoreWHInventory::where('product_id',$request->id)->where('store_wh_id',$st_wh->store_wh_id)->first();
+            if($store_wh_inventory){
+                $tmp += $store_wh_inventory->amount;
+            }
+        }
+        return response()->json(['product'=>$product,'promotion'=>$promotion, 'amountmax'=>$tmp]);
     }
     public function getEditProduct1(Request $request){
         $p = product::find($request->id);
