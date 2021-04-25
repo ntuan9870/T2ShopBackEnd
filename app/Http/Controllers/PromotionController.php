@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Promotion;
 use Illuminate\Support\Facades\Validator;
 use App\Models\product;
+use Illuminate\Support\Facades\DB;
 
 class PromotionController extends Controller
 {
@@ -49,7 +50,7 @@ class PromotionController extends Controller
         return response()->json(['success'=>'Sửa đổi thông tin thành công!']);
     }
     public function getproduct(){
-        $products=Promotion::where('promotion_status','=',1)->join('products','products.product_promotion','=','promotion.promotion_id')->orderBy('promotion_infor','desc')->limit(5)->get();
+        $products=DB::table('promotion')->join('products','products.product_promotion','=','promotion.promotion_id')->where('promotion_status','=',1)->orderBy('promotion_infor','desc')->limit(6)->get();
         return response()->json(['products'=>$products]);
     }
 }

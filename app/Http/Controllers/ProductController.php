@@ -468,6 +468,12 @@ class ProductController extends Controller
             return response()->json(['favoriteProduct'=>$favoriteProduct]);
         }
     }
+    public function checkAcceptComment(Request $request){
+        $order=DB::table('orders')->join('order_items','orders.order_id','=','order_items.order_id')->where('user_id',$request->user_id)->where('product_id',$request->product_id)->get();
+        if($order){
+            return response()->json(['order'=>$order]);
+        }
+    }
     
 }
 
