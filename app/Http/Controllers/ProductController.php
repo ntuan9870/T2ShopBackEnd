@@ -15,6 +15,7 @@ use App\Models\FavoriteProduct;
 use App\Models\User;
 use App\Models\StoreWHInventory;
 use App\Models\HangTon;
+use App\Models\HistoryPrice;
 use App\Models\StoreWarehouse;
 use Illuminate\Support\Facades\Mail;
 
@@ -138,6 +139,10 @@ class ProductController extends Controller
         $p->product_img = "http://localhost:8000/storage/prodimages/".$filename;
         $request->img->storeAs('/prodimages',$filename);
         $p->save();
+        $h = new HistoryPrice;
+        $h->product_id = $p->product_id;
+        $h->product_price = $p->product_price;
+        $h->save();
         return response()->json(['message'=>"Thêm sản phẩm thành công!"]);
     }
     public function ckeckid(Request $request){
@@ -187,6 +192,15 @@ class ProductController extends Controller
             $p->product_img = "http://localhost:8000/storage/prodimages/".$filename;
             $request->product_img->storeAs('prodimages',$filename);
             $p->save();
+        }
+        $h = HistoryPrice::where('product_id',$p->product_id)->orderBy('updated_at', 'desc')->first();
+        if($h){
+            if($p->product_price!=$h->product_price){
+                $h = new HistoryPrice;
+                $h->product_id = $p->product_id;
+                $h->product_price = $p->product_price;
+                $h->save();  
+            }
         }
         // $favoriteProduct = FavoriteProduct::where('product_id',$request->product_id)->get();
         // if($favoriteProduct){
@@ -499,6 +513,10 @@ class ProductController extends Controller
         if($order){
             return response()->json(['order'=>$order]);
         }
+    }
+    public function getHistoryPrice(Request $request){
+        $hps = HistoryPrice::where('product_id', $request->product_id)->get();
+        return response()->json(['hps'=>$hps]);
     }
     
 }

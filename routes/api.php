@@ -30,6 +30,7 @@ Route::group(["namespace"=>"App\Http\Controllers"],function() {
     Route::any('getFavoriteProduct','ProductController@getFavoriteProduct');
     Route::any('getFavorite','ProductController@getFavorite');
     Route::any('checkAcceptComment','ProductController@checkAcceptComment');
+    Route::any('getHistoryPrice','ProductController@getHistoryPrice');
     
 
     Route::any('category/add','CategoryController@add');
