@@ -29,14 +29,18 @@ class RecommendedController extends Controller
                 array_push($products,$product);
             }
             $promotions = array();
+            $ratings = array();
             for($i=0; $i<count($products);$i++){
                 foreach($products[$i] as $promo){
                     $promotion = Promotion::find($promo->product_promotion);
                     array_push($promotions,$promotion);
+                    $tb = DB::table('rating')->where('product_id',$request->product_id)->avg('rating_star');
+                    if($tb=='') $tb = '0';
+                    array_push($ratings, (string)$tb);
                 }
             }
             if($product){
-                return response()->json(['products'=>$product,'promotions'=>$promotions]);
+                return response()->json(['products'=>$product,'promotions'=>$promotions,'ratings'=>$ratings]);
             }
         }
     }

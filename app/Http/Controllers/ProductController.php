@@ -496,11 +496,15 @@ class ProductController extends Controller
     public function getFavoriteProduct(Request $request){
         $favoriteProduct=FavoriteProduct::where('user_id','=',$request->user_id)->join('products','products.product_id','=','favoriteproduct.product_id')->get();
         $promotions=array();
+        $ratings = array();
         foreach($favoriteProduct as $f){
             $promotion = Promotion::find($f->product_promotion);
             array_push($promotions,$promotion);
+            $tb = DB::table('rating')->where('product_id',$request->product_id)->avg('rating_star');
+            if($tb=='') $tb = '0';
+            array_push($ratings, (string)$tb);
         }
-        return response()->json(['products'=>$favoriteProduct,'promotions'=>$promotions]);
+        return response()->json(['products'=>$favoriteProduct,'promotions'=>$promotions,'ratings'=>$ratings]);
     }
     public function getFavorite(Request $request){
         $favoriteProduct=FavoriteProduct::where('user_id','=',$request->user_id)->where('product_id',$request->product_id)->get();
