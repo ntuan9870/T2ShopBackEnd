@@ -133,6 +133,7 @@ Route::group(["namespace"=>"App\Http\Controllers"],function() {
     Route::any('warehouse/getAllCTPXLN','WarehouseController@getAllCTPXLN');
     Route::any('warehouse/getAllP','WarehouseController@getAllP');
     Route::any('warehouse/getAllDBIByProductId','WarehouseController@getAllDBIByProductId');
+    Route::any('warehouse/getAllDWHP','WarehouseController@getAllDWHP');
     
     Route::any('supplier/add','SupplierController@add');
     Route::any('supplier/show','SupplierController@show');

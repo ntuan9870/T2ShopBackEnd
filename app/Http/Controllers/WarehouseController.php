@@ -506,4 +506,9 @@ class WarehouseController extends Controller
         $dbis = DetailBallotImport::where('product_id',$request->product_id)->orderBy('created_at', 'asc')->get();
         return response()->json(['message'=>'success', 'dbis'=>$dbis]);
     }
+    public function getAllDWHP(Request $request){
+        $dbi = DetailBallotImport::join('ballotimports','detail_ballot_import.bi_id','=','ballotimports.bi_id')->where('detail_ballot_import.product_id',$request->product_id)
+        ->where('ballotimports.warehouse_id',$request->wh_id)->get();
+        return response()->json(['message'=>'success', 'dbi'=>$dbi]);
+    }
 }
