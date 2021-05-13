@@ -55,6 +55,7 @@ Route::group(["namespace"=>"App\Http\Controllers"],function() {
     Route::any('users/getUser','AdminMemberController@getUser');
     Route::any('users/postEdit','AdminMemberController@postEdit');
     Route::any('users/removeUser','AdminMemberController@removeUser');
+    Route::any('users/edit','AdminMemberController@Edit');
 
     Route::any('cart/add','CartController@add'); 
     Route::any('cart/show','CartController@show');
@@ -160,6 +161,7 @@ Route::group(["namespace"=>"App\Http\Controllers"],function() {
     Route::any('voucher/getallvoucherforuser','VoucherController@getallvoucherforuser');
     Route::any('voucher/getdetailvoucher','VoucherController@getdetailvoucher');
     Route::any('voucher/getSumVoucherUser','VoucherController@getSumVoucherUser');
+    Route::any('voucher/showBirthDayUser','VoucherController@showBirthDayUser');
 
     Route::any('admin/gethome','AdminController@gethome');
 

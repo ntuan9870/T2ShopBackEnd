@@ -49,4 +49,32 @@ class AdminMemberController extends Controller
         $user->delete();
         return response()->json(['message'=>'success']);
     }
+    public function Edit(Request $request){
+    //     $validate = Validator::make($request->all(),
+    //     [
+    //         'user_name'=>'required',
+    //         'user_email'=>'required|email|unique:user,user_email'
+    //     ],
+    //     [
+    //         'user_name.required'=>'Tên hiển thị là trường bắt buộc!',
+    //         'user_email.required'=>'Email là trường bắt buộc!',
+    //         'user_email.email'=>'Vui lòng nhập email đúng định dạng!'
+    //     ]);
+    // if($validate->fails()){
+    //     return response()->json(['error'=>'Kiểm tra dữ liệu nhập vào!']);
+    // }else{
+        $user = User::find($request->user_id);
+        $user->user_name = $request->user_name;
+        if($request->user_phone!=null){
+            $user->user_phone = $request->user_phone;
+        }
+        $user->user_email = $request->user_email;
+        if($request->user_level!=null){
+            $user->user_level = $request->user_level;
+        }
+        $user->birthday = $request->birthday;
+        $user->save();
+        return response()->json(['success'=>'Sửa đổi thông tin thành công!']);
+    // }
+    }
 }

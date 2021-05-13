@@ -161,4 +161,33 @@ class VoucherController extends Controller
         }
         return response()->json(['sum'=>$sum]);
     }
+    public function showBirthDayUser(Request $request){
+        $user=User::where('birthday','!=',null)->select('user_id','birthday')->get();
+        foreach($user as $u){
+            $birthday = explode("-", $u->birthday);
+            if(Carbon::now('Asia/Ho_Chi_Minh')->month == $birthday[1]){
+                $dt = Carbon::now('Asia/Ho_Chi_Minh')->format('Y-m-d');
+                $voucher=Voucher::where('voucher_id',5)->where('voucher_start', '<=', $dt)->where('voucher_end', '>=', $dt)->where('voucher_apply','true')->first();
+                if( $voucher){
+                    $sum=0;
+                    $user_voucher=UserVoucher::where('voucher_id',5)->get();
+                    foreach($user_voucher as $uv){
+                        $sum+=$uv->amount_voucher;
+                    }
+                    if($voucher->voucher_total-$sum>0){
+                        $amountUser=UserVoucher::where('voucher_id',5)->where('user_id',$u->user_id)->first();
+                        if(!isset($amountUser)){
+                            $newUV= new UserVoucher();
+                            $newUV->voucher_id=5;
+                            $newUV->user_id=$u->user_id;
+                            $newUV->amount_voucher=1;
+                            $newUV->save();
+                            return response()->json(['message'=>'success']);
+                        }
+                    }
+                }
+            }
+        }
+        // return response()->json(['user'=>$user]);$birthday[1]
+    }
 }
