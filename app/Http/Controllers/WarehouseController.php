@@ -437,6 +437,8 @@ class WarehouseController extends Controller
         $be = new BallotExport();
         $be->user_id = $request->user_id;
         $be->sum_amount = $request->sum_amount;
+        $be->store_wh_id = $request->store_wh_id;
+        $be->wh_id = $request->wh_id;
         $be->save();
         foreach($data as $de){
             $dbe = new DetailBallotExport();
