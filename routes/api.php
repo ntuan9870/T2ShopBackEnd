@@ -204,5 +204,6 @@ Route::group(["namespace"=>"App\Http\Controllers"],function() {
     Route::any('store/editWH','StoreController@editWH');
     Route::any('store/getAllP','StoreController@getAllP');
     Route::any('store/getAllStoreWarehouseByStoreID','StoreController@getAllStoreWarehouseByStoreID');
+    Route::any('store/getAdmin','StoreController@getAdmin');
 });
 

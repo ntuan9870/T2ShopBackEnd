@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use App\Models\Store;
 use App\Models\StoreWarehouse;
 use App\Models\StoreWHInventory;
+use App\Models\User;
 
 use Illuminate\Http\Request;
 
@@ -16,6 +17,7 @@ class StoreController extends Controller
         $s->store_ward = $request->store_ward;
         $s->store_district = $request->store_district;
         $s->store_status = 1;
+        $s->admin_id = $request->admin_id;
         // $s->wh_capacity = $request->wh_capacity;
         $s->save();
         return response()->json(['message'=>'success']);
@@ -66,6 +68,7 @@ class StoreController extends Controller
         }else{
             $s->store_status = false;
         }
+        $s->admin_id = $request->admin_id;
         $s->save();
         return response()->json(['message'=>'success','store'=>$s]);
     }
@@ -115,5 +118,9 @@ class StoreController extends Controller
     public function getAllStoreWarehouseByStoreID(Request $request){
         $storeWHs = StoreWarehouse::where('store_id', $request->store_id)->get();
         return response()->json(['message'=>'success', 'storeWHs'=>$storeWHs]);
+    }
+    public function getAdmin(Request $request){
+        $admin = User::where('user_level',2)->select('user_id','user_name')->get();
+        return response()->json(['admin'=>$admin]);
     }
 }
