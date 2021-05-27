@@ -445,7 +445,7 @@ class WarehouseController extends Controller
             $dbe->be_id = $be->be_id;
             $dbe->product_id = $de['product_id'];
             $dbe->amount = $de['amount'];
-            $dbe->price = $de['price'];
+            // $dbe->price = $de['price'];
             $dbe->save();
             foreach($de['ctpx_ln'] as $c){
                 $cl = new CTPX_LN();
@@ -459,15 +459,19 @@ class WarehouseController extends Controller
                 $bi=BallotImport::find($c['bi_id']);
                 $ht = HangTon::where('warehouse_id',$bi->warehouse_id)->where('product_id',$de['product_id'])->first();
                 $ht->amount -=  $c['amount'];
-                $ht->save();
+                if($ht->amount <= 0){
+                    $ht->delete(); 
+                }else{
+                    $ht->save();
+                }
                 $wh=WareHouse::find($bi->warehouse_id);
                 $wh->empty+=$c['amount'];
                 $wh->save();
             }
-            $hp = new HistoryPrice();
-            $hp->product_id=$de['product_id'];
-            $hp->product_price=$de['price'];
-            $hp->save();
+            // $hp = new HistoryPrice();
+            // $hp->product_id=$de['product_id'];
+            // $hp->product_price=$de['price'];
+            // $hp->save();
             // $p = product::find($de['product_id']);
             // $p->product_price = $de['price'];
             // $p->product_amount = $p->product_amount + $de['amount'];
