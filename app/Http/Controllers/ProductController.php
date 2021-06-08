@@ -522,6 +522,10 @@ class ProductController extends Controller
         $hps = HistoryPrice::where('product_id', $request->product_id)->get();
         return response()->json(['hps'=>$hps]);
     }
+    public function getHistoryPriceNew(Request $request){
+        $products = DB::table('history_price')->join('products','history_price.product_id','=','products.product_id')->limit(1)->orderBy('hp_id','desc')->get();
+        return response()->json(['products'=>$products]);
+    }
     
 }
 
