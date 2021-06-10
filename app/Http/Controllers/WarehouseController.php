@@ -411,7 +411,7 @@ class WarehouseController extends Controller
         return response()->json(['message'=>'success', 'bis'=>$bis]);
     }
     public function getAllBDIByBIID(Request $request){
-        $dbis = DetailBallotImport::where('bi_id',$request->bi_id)->get();
+        $dbis = DetailBallotImport::where('bi_id',$request->bi_id)->join('products', 'products.product_id', '=', 'detail_ballot_import.product_id')->get();
         return response()->json(['message'=>'success', 'dbis'=>$dbis]);
     }
     public function getAllBIEligible(Request $request){
@@ -497,7 +497,7 @@ class WarehouseController extends Controller
         return response()->json(['message'=>'success', 'bes'=>$bes]);
     }
     public function getAllDBEByBEID(Request $request){
-        $dbes = DetailBallotExport::where('be_id',$request->be_id)->get();
+        $dbes = DetailBallotExport::where('be_id',$request->be_id)->join('products', 'products.product_id', '=', 'detail_ballot_export.product_id')->get();
         return response()->json(['message'=>'success', 'dbes'=>$dbes]);
     }
     public function getAllCTPXLN(Request $request){

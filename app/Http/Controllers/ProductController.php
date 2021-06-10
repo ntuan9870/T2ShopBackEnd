@@ -526,6 +526,11 @@ class ProductController extends Controller
         $products = DB::table('history_price')->join('products','history_price.product_id','=','products.product_id')->limit(1)->orderBy('hp_id','desc')->get();
         return response()->json(['products'=>$products]);
     }
+
+    public function getAllProduct(){
+        $products = product::all();
+        return response()->json(['products'=>$products]);
+    }
     
 }
 
