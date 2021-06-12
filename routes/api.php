@@ -32,6 +32,7 @@ Route::group(["namespace"=>"App\Http\Controllers"],function() {
     Route::any('checkAcceptComment','ProductController@checkAcceptComment');
     Route::any('getHistoryPrice','ProductController@getHistoryPrice');
     Route::any('getHistoryPriceNew','ProductController@getHistoryPriceNew');
+    Route::any('getAllProduct','ProductController@getAllProduct');
     
 
     Route::any('category/add','CategoryController@add');
@@ -206,5 +207,7 @@ Route::group(["namespace"=>"App\Http\Controllers"],function() {
     Route::any('store/getAllP','StoreController@getAllP');
     Route::any('store/getAllStoreWarehouseByStoreID','StoreController@getAllStoreWarehouseByStoreID');
     Route::any('store/getAdmin','StoreController@getAdmin');
+
+    Route::any('firebase', 'FirebaseController@index');
 });
 

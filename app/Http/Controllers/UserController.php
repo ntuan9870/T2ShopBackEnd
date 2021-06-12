@@ -14,12 +14,13 @@ class UserController extends Controller
 {
     public function register(Request $request){
         $validator = Validator::make($request->all(),[
-            'user_name' => 'required|unique:user,user_name',
+            // 'user_name' => 'required|unique:user,user_name',
+            'user_name' => 'required',
             'user_email' => 'required|unique:user,user_email',
             'user_password' => 'required'
         ]);
         if($validator->fails()){
-            return response()->json(['error'=>$validator->errors()->all()],409);
+            return response()->json(['errors'=>$validator->errors()->all()]);
         }
         $u = new User();
         $u->user_name = $request->user_name;

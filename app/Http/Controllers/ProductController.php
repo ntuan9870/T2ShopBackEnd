@@ -532,6 +532,11 @@ class ProductController extends Controller
         // $products = HistoryPrice::all();
         return response()->json(['products'=>$products]);
     }
+
+    public function getAllProduct(){
+        $products = product::all();
+        return response()->json(['products'=>$products]);
+    }
     
 }
 
