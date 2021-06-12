@@ -18,6 +18,7 @@ use App\Models\HangTon;
 use App\Models\HistoryPrice;
 use App\Models\StoreWarehouse;
 use Illuminate\Support\Facades\Mail;
+use Carbon\Carbon;
 
 class ProductController extends Controller
 {
@@ -199,6 +200,9 @@ class ProductController extends Controller
                 $h = new HistoryPrice;
                 $h->product_id = $p->product_id;
                 $h->product_price = $p->product_price;
+                $h->price_history = $request->oldPrice; 
+                $dt = Carbon::now('Asia/Ho_Chi_Minh')->format('Y-m-d');
+                $h->time = $dt;
                 $h->save();  
             }
         }
@@ -523,7 +527,9 @@ class ProductController extends Controller
         return response()->json(['hps'=>$hps]);
     }
     public function getHistoryPriceNew(Request $request){
-        $products = DB::table('history_price')->join('products','history_price.product_id','=','products.product_id')->limit(1)->orderBy('hp_id','desc')->get();
+        // $products = DB::table('history_price')->join('products','history_price.product_id','=','products.product_id')->limit(1)->orderBy('hp_id','desc')->get();
+        $products = DB::table('history_price')->join('products','history_price.product_id','=','products.product_id')->get();
+        // $products = HistoryPrice::all();
         return response()->json(['products'=>$products]);
     }
     
