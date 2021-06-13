@@ -67,6 +67,8 @@ class AdminMemberController extends Controller
         $user->user_name = $request->user_name;
         if($request->user_phone!=null){
             $user->user_phone = $request->user_phone;
+        }else{
+            $user->user_phone = 'null';
         }
         $user->user_email = $request->user_email;
         if($request->user_level!=null){

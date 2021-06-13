@@ -143,7 +143,7 @@ class VoucherController extends Controller
     }
     public function getallvoucherforuser(Request $request) {
         $dt = Carbon::now('Asia/Ho_Chi_Minh')->format('Y-m-d');
-        $vs = DB::table('user_voucher')->join('vouchers','user_voucher.voucher_id','=','vouchers.voucher_id')->where('user_id',$request->user_id)->where('voucher_start', '<=', $dt)->where('voucher_end', '>=', $dt)->where('voucher_apply','true')->get('*');
+        $vs = DB::table('user_voucher')->join('vouchers','user_voucher.voucher_id','=','vouchers.voucher_id')->where('user_id',$request->user_id)->where('voucher_start', '<=', $dt)->where('voucher_end', '>=', $dt)->where('voucher_apply','true')->where('amount_voucher','>','0')->get('*');
         return response()->json(['vouchers'=>$vs]);
         // return response()->json(['vouchers'=>$dt]);
     }
@@ -165,6 +165,10 @@ class VoucherController extends Controller
         $user=User::where('birthday','!=',null)->select('user_id','birthday')->get();
         foreach($user as $u){
             $birthday = explode("-", $u->birthday);
+            $check = UserVoucher::where('voucher_id',5)->get();
+            if(!$check && Carbon::now('Asia/Ho_Chi_Minh')->year==$birthday[0]){
+                return;
+            }
             if(Carbon::now('Asia/Ho_Chi_Minh')->month == $birthday[1]){
                 $dt = Carbon::now('Asia/Ho_Chi_Minh')->format('Y-m-d');
                 $voucher=Voucher::where('voucher_id',5)->where('voucher_start', '<=', $dt)->where('voucher_end', '>=', $dt)->where('voucher_apply','true')->first();
