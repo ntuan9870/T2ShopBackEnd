@@ -166,6 +166,13 @@ class ProductController extends Controller
         }
         $p = product::find($request->product_id);
         $p->product_name = $request->product_name;
+        if($p->product_price>$request->product_price){
+            $fs = FavoriteProduct::where('product_id', $p->product_id)->get();
+            foreach($fs as $f){
+                $f->notified = 0;
+                $f->save();
+            }
+        }
         $p->product_price = $request->product_price;
         if($request->product_warranty!=null){
             $p->product_warranty = $request->product_warranty;
@@ -184,6 +191,13 @@ class ProductController extends Controller
         $p->product_cate = $request->product_cate;
         if($request->product_promotion!=null){
             $p->product_promotion = $request->product_promotion;
+            if($request->product_promotion!=0){
+                $fs = FavoriteProduct::where('product_id', $p->product_id)->get();
+                foreach($fs as $f){
+                    $f->notify_promotion = 0;
+                    $f->save();
+                }
+            }
         }else{
             $p->product_promotion = 0;
         }
@@ -537,7 +551,29 @@ class ProductController extends Controller
         $products = product::all();
         return response()->json(['products'=>$products]);
     }
-    
+    public function getAllProduceReducePrice(Request $request){
+        $products = product::join('favoriteproduct', 'products.product_id', '=', 'favoriteproduct.product_id')->where('favoriteproduct.user_id',$request->user_id)->where('favoriteproduct.notified','0')->get();
+        foreach($products as $p){
+            $f = FavoriteProduct::where('product_id', $p->product_id)->where('user_id', $request->user_id)->first();
+            if($f){
+                $f->notified = 1;
+                $f->save();
+            }
+        }
+        return response()->json(['products'=>$products]);
+    }
+    public function getAllProductChangePromotion(Request $request){
+        $products = product::join('favoriteproduct', 'products.product_id', '=', 'favoriteproduct.product_id')->where('favoriteproduct.user_id',$request->user_id)->where('favoriteproduct.notify_promotion','0')->get();
+        foreach($products as $p){
+            $f = FavoriteProduct::where('product_id', $p->product_id)->where('user_id', $request->user_id)->first();
+            if($f){
+                $f->notify_promotion = 1;
+                $f->save();
+            }
+        }
+        return response()->json(['products'=>$products]);
+    }
+
 }
 
 

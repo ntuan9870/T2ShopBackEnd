@@ -33,6 +33,8 @@ Route::group(["namespace"=>"App\Http\Controllers"],function() {
     Route::any('getHistoryPrice','ProductController@getHistoryPrice');
     Route::any('getHistoryPriceNew','ProductController@getHistoryPriceNew');
     Route::any('getAllProduct','ProductController@getAllProduct');
+    Route::any('getAllProduceReducePrice','ProductController@getAllProduceReducePrice');
+    Route::any('getAllProductChangePromotion','ProductController@getAllProductChangePromotion');
     
 
     Route::any('category/add','CategoryController@add');
