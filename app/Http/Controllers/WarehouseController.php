@@ -407,7 +407,7 @@ class WarehouseController extends Controller
         return response()->json(['message'=>'success']);
     }
     public function getAllBI(){
-        $bis = BallotImport::all();
+        $bis = BallotImport::orderBy('updated_at', 'DESC')->get();
         return response()->json(['message'=>'success', 'bis'=>$bis]);
     }
     public function getAllBDIByBIID(Request $request){
