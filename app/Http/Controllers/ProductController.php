@@ -190,14 +190,14 @@ class ProductController extends Controller
         // $p->product_amount = $request->product_amount;
         $p->product_cate = $request->product_cate;
         if($request->product_promotion!=null){
-            $p->product_promotion = $request->product_promotion;
-            if($request->product_promotion!=0){
+            if($request->product_promotion!=0&&$request->product_promotion!=$p->product_promotion){
                 $fs = FavoriteProduct::where('product_id', $p->product_id)->get();
                 foreach($fs as $f){
                     $f->notify_promotion = 0;
                     $f->save();
                 }
             }
+            $p->product_promotion = $request->product_promotion;
         }else{
             $p->product_promotion = 0;
         }
