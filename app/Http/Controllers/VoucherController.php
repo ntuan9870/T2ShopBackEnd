@@ -121,6 +121,9 @@ class VoucherController extends Controller
         $uv = UserVoucher::find($uv->user_voucher_id);
         $old_amount = $uv->amount_voucher;
         $uv->amount_voucher = $request->amount_voucher;
+        if($uv->amount_voucher>$request->amount_voucher){
+            $uv->notified = 0;
+        }
         $u = User::find($uv->user_id);
         $v = Voucher::find($uv->voucher_id);
         $u->voucher_user_score -= (int)(($uv->amount_voucher-$old_amount)*$v->voucher_score);
@@ -193,5 +196,17 @@ class VoucherController extends Controller
             }
         }
         // return response()->json(['user'=>$user]);$birthday[1]
+    }
+    public function getAllMessageVoucher(Request $request){
+        $uvs = DB::table('user_voucher')->where('user_id',$request->user_id)->where('notified','0')->get();
+        $vouchers = array();
+        foreach($uvs as $u){
+            $voucher = Voucher::find($u->voucher_id);
+            array_push($vouchers,$voucher);
+            $uv = UserVoucher::where('user_id',$request->user_id)->where('voucher_id', $u->voucher_id)->first();
+            $uv->notified = 1;
+            $uv->save();
+        }
+        return response()->json(['vouchers'=>$vouchers]);
     }
 }

@@ -166,6 +166,7 @@ Route::group(["namespace"=>"App\Http\Controllers"],function() {
     Route::any('voucher/getdetailvoucher','VoucherController@getdetailvoucher');
     Route::any('voucher/getSumVoucherUser','VoucherController@getSumVoucherUser');
     Route::any('voucher/showBirthDayUser','VoucherController@showBirthDayUser');
+    Route::any('voucher/getAllMessageVoucher','VoucherController@getAllMessageVoucher');
 
     Route::any('admin/gethome','AdminController@gethome');
 

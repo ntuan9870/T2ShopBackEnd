@@ -131,6 +131,7 @@ class OrderController extends Controller
                 $amountUser=UserVoucher::where('voucher_id',4)->where('user_id',$request->user_id)->first();
                 if(isset($amountUser)){
                     $amountUser->amount_voucher+=1;
+                    $amountUser->notified = 0;
                     $amountUser->save();
                 }else{
                     $newUV= new UserVoucher();
