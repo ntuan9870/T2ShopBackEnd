@@ -165,9 +165,9 @@ class OrderController extends Controller
      }
 
     public function show(Request $request){
-        $orders = DB::table('orders')->where('user_id',$request->user_id)->orderBy('order_id','desc')->get('*');
+        $orders = DB::table('orders')->where('user_id',$request->user_id)->join('stores','orders.store_id', 'stores.store_id')->orderBy('order_id','desc')->get('*');
         if($request->user_id==''){
-            $orders = DB::table('orders')->orderBy('order_id','desc')->get('*');
+            $orders = DB::table('orders')->join('stores','orders.store_id', 'stores.store_id')->orderBy('order_id','desc')->get('*');
         }
         return response()->json(['orders'=>$orders]);
     }
